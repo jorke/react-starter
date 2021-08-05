@@ -1,0 +1,14 @@
+scalar JSON
+
+type Query {
+  hello: String
+}
+
+# type Mutation {
+#   meh: meh
+# }
+
+schema {
+    query: Query
+#    mutation: Mutation
+}
