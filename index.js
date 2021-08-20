@@ -14,7 +14,7 @@ const typeDefs = gql(schema)
 
 const app = express()
 const PORT = process.env.PORT || 3000
-const config = configFn()
+const config = configFn('', 'development')
 const compiler = webpack(config)
 
 let server = null;

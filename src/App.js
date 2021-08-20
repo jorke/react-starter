@@ -1,10 +1,13 @@
 import React from 'react'
-import { ChakraProvider, Container, Text } from "@chakra-ui/react"
+import { ChakraProvider } from "@chakra-ui/react"
+import { Center } from '@chakra-ui/react'
+import GraphQLComponent from './GraphQLComponent'
 
 export default props => 
   <ChakraProvider>
-    <Container>
-      <Text fontSize="6xl">Hello World!</Text>
-    </Container>
+      <Center height="100px">
+        Hello <GraphQLComponent />!
+      </Center>
   </ChakraProvider>
-  
+
+
