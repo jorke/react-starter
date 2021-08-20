@@ -26,7 +26,7 @@ export default (env, args) => {
     ],
     output: {
       filename: '[name].[contenthash].js',
-      path: path.join(__dirname, 'dist'),
+      path: path.join(__dirname, 'dist', 'web'),
       publicPath: paths.publicUrlOrPath,
     },
     module: {
