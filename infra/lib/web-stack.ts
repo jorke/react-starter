@@ -8,6 +8,13 @@ import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch'
+import * as apigw from 'aws-cdk-lib/aws-apigateway'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
+import { CfnKey } from 'aws-cdk-lib/lib/aws-kms';
+import { LambdaIntegration } from 'aws-cdk-lib/aws-apigateway';
+
+
+
 
 export interface SiteProps {
   domain: string;
@@ -36,6 +43,21 @@ export class NoServers extends Construct {
       principals: [ new iam.CanonicalUserPrincipal(oai.cloudFrontOriginAccessIdentityS3CanonicalUserId)]
     }));
 
+    const graphql = new lambda.Function(this, 'graphql-api', {
+      runtime: lambda.Runtime.NODEJS_14_X,
+      handler: 'index.handler',
+      code: lambda.Code.fromAsset('../dist/api')
+    })
+
+
+
+
+    const api = new apigw.RestApi(this, 'graphql')
+    const res = api.root.addProxy({
+      defaultIntegration: new LambdaIntegration(graphql),
+      anyMethod: true,
+    })
+    
     const certificateArn = new acm.DnsValidatedCertificate(this, 'cert', {
       domainName,
       hostedZone,
@@ -77,6 +99,34 @@ export class NoServers extends Construct {
         }
       ]
     });
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     new route53.ARecord(this, 'SiteAliasRecord', {
       recordName: domainName,
