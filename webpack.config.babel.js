@@ -1,14 +1,17 @@
 import path from 'path'
+import fs from 'fs'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
 import webpack, { DefinePlugin } from 'webpack'
 import paths from "./scripts/paths"
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
 // import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import InterpolateHtmlPlugin from 'react-dev-utils/InterpolateHtmlPlugin'
 import getClientEnvironment from './scripts/env'
 
-const appEnv = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
+const appEnv = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1))
+const appDir = fs.realpathSync(process.cwd())
 
 export default (env, args) => {
   const isDevelopment = args.mode !== 'production';
@@ -21,13 +24,13 @@ export default (env, args) => {
       modules: [path.join(__dirname, 'node_modules')],
     },
     entry: [
-      ...(isDevelopment) ? ['webpack-hot-middleware/client']: [],
-      paths.appIndexJs,
+      isDevelopment && '@gatsbyjs/webpack-hot-middleware/client',
+      './src/index.js',
     ],
     output: {
       filename: '[name].[contenthash].js',
       path: path.join(__dirname, 'dist', 'web'),
-      publicPath: paths.publicUrlOrPath,
+      publicPath: path.resolve(appDir, paths.publicUrlOrPath),
     },
     module: {
       rules: [ 
@@ -44,6 +47,7 @@ export default (env, args) => {
             loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env'],
+              // plugins: [isDevelopment && require.resolve('react-refresh/babel')].filter(Boolean),
             },
           },
         },
@@ -53,7 +57,7 @@ export default (env, args) => {
               'style-loader', 
               // MiniCssExtractPlugin.loader,
               'css-loader',
-              // 'postcss-loader'
+              'postcss-loader'
             ],
         },
       ],
@@ -63,7 +67,12 @@ export default (env, args) => {
       hot: true,
     },
     plugins: [
-        
+      isDevelopment && new webpack.HotModuleReplacementPlugin(),
+      isDevelopment && new ReactRefreshWebpackPlugin(),  
+      new HTMLWebpackPlugin({
+        template: path.resolve(appDir, 'public/index.html'),
+        inject: true        
+      }),
       // new MiniCssExtractPlugin(),
       new InterpolateHtmlPlugin(HTMLWebpackPlugin, appEnv.raw),
       // new WebpackManifestPlugin({
@@ -85,13 +94,7 @@ export default (env, args) => {
       //   },
       // }),
       new DefinePlugin(appEnv.stringified),
-      new HTMLWebpackPlugin({
-        template: paths.appHtml,
-        inject: true        
-      }),
-      ...(isDevelopment) ? [new webpack.HotModuleReplacementPlugin()] : []
-        // production
-    ],
+    ].filter(Boolean),
     optimization: (isDevelopment) ? {} :   
       {
         splitChunks: {

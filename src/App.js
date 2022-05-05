@@ -1,13 +1,13 @@
 import React from 'react'
-import { ChakraProvider } from "@chakra-ui/react"
-import { Center } from '@chakra-ui/react'
 import GraphQLComponent from './GraphQLComponent'
+import './App.css'
 
-export default props => 
-  <ChakraProvider>
-      <Center height="100px">
-        Hello <GraphQLComponent />!
-      </Center>
-  </ChakraProvider>
+// named component needed to not break HMR
+const App = props => 
+  <div className='App-Root'>
+    <h1>
+      Hello <GraphQLComponent />
+    </h1>
+  </div>
 
-
+export default App

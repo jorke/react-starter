@@ -3,7 +3,8 @@ import express from 'express'
 import configFn from './webpack.config.babel'
 import webpack from 'webpack'
 import middleware from 'webpack-dev-middleware'
-import webpackHotMiddleware from 'webpack-hot-middleware'
+// import webpackHotMiddleware from 'webpack-hot-middleware'
+import webpackHotMiddleware from '@gatsbyjs/webpack-hot-middleware'
 import { ApolloServer, gql } from 'apollo-server-express'
 import openBrowser from 'react-dev-utils/openBrowser'
 
@@ -27,9 +28,6 @@ async function startServer() {
     tracing: true,
   })
   await server.start()
-  const hotMiddleware = webpackHotMiddleware(compiler, {
-    publicPath: config.output.publicPath,
-  })
   
   app.use(middleware(compiler, {
     publicPath: config.output.publicPath,
@@ -43,7 +41,6 @@ async function startServer() {
 
 startServer()
 
-console.log(`listening: http://localhost:${PORT}`)
-app.listen(PORT)
+app.listen(PORT, () => console.log(`listening: http://localhost:${PORT}`))
 
 openBrowser(`http://localhost:${PORT}`)

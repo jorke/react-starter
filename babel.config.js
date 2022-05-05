@@ -1,0 +1,18 @@
+module.exports = (api) => {
+    api.cache.using(() => process.env.NODE_ENV);
+    return {
+      presets: [
+        '@babel/preset-env',
+        // Enable development transform of React with new automatic runtime
+        ['@babel/preset-react', { development: !api.env('production'), runtime: 'automatic' }],
+      ],
+      // Applies the react-refresh Babel plugin on non-production modes only
+      plugins: [
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-proposal-object-rest-spread",
+        "@babel/plugin-transform-runtime",
+        "import-graphql",
+        (!api.env('production') && 'react-refresh/babel')
+      ]
+    } 
+  }

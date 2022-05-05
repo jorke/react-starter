@@ -1,6 +1,5 @@
 import React from 'react'
 import { gql, useQuery } from '@apollo/client'
-import { Spinner } from '@chakra-ui/react'
 
 export default props => {
   const { loading, error, data } = useQuery(
@@ -11,7 +10,7 @@ export default props => {
 
     `
   )
-  if (loading) return <Spinner />
+  if (loading) return 'loading..'
   
-  return <>{data.hello}</>
+  return <>{data.hello}!</>
 }

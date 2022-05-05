@@ -1,0 +1,16 @@
+.App {
+    text-align: center;
+  }
+
+.App-Root {
+    min-width: 100vw;
+    min-height: 100vh;
+    background-color:#282c34;
+
+}
+
+h1 {
+   color: white;
+   text-align: center; 
+   font-size: calc(10px + 2vmin);
+}
