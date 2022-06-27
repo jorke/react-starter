@@ -24,7 +24,7 @@ export default (env, args) => {
       modules: [path.join(__dirname, 'node_modules')],
     },
     entry: [
-      isDevelopment && '@gatsbyjs/webpack-hot-middleware/client',
+      ...(isDevelopment ? ['@gatsbyjs/webpack-hot-middleware/client']:[] ),
       './src/index.js',
     ],
     output: {
@@ -67,8 +67,11 @@ export default (env, args) => {
       hot: true,
     },
     plugins: [
-      isDevelopment && new webpack.HotModuleReplacementPlugin(),
-      isDevelopment && new ReactRefreshWebpackPlugin(),  
+      ...( isDevelopment ? 
+        [
+          new webpack.HotModuleReplacementPlugin(),
+          new ReactRefreshWebpackPlugin(),  
+        ]: []),
       new HTMLWebpackPlugin({
         template: path.resolve(appDir, 'public/index.html'),
         inject: true        
